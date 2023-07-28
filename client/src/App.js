@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import axios from 'axios'
 import './App.css';
 
@@ -11,6 +11,8 @@ function App() {
   const [password, setPassword] = useState('')
 
   const [loginStatus, setLoginStatus] = useState('')
+  
+  axios.defaults.withCredentials = true
 
   const register = () => {
     axios.post("http://localhost:3001/register", {username: usernameReg, password: passwordReg})
@@ -32,7 +34,13 @@ function App() {
     })
   }
 
-
+  useEffect(() => {
+    axios.get("http://localhost:3001/login").then((response) => {
+      if (response.data.loggedIn === true) {
+        setLoginStatus(response.data.user[0].username)
+      }
+    })
+  }, [])
   return (
     <div className="App">
       <div className="registration">
